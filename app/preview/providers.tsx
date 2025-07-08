@@ -26,7 +26,7 @@ const Providers: FC<Props> = (props) => {
     const isConnected = useAndromedaStore(state => state.isConnected)
     const isLoading = useAndromedaStore(state => state.isLoading)
     const keplr = useAndromedaStore(state => state.keplr)
-    const connectedChainId = useAndromedaStore(state => state.chainId)
+    const connectedChainId = useAndromedaStore(state => state.connectedChain)
 
     useLayoutEffect(() => {
         initiateKeplr();
@@ -35,7 +35,7 @@ const Providers: FC<Props> = (props) => {
     useLayoutEffect(() => {
         const autoconnect = localStorage.getItem(KEPLR_AUTOCONNECT_KEY);
         if (!isLoading && typeof keplr !== "undefined" && autoconnect === keplr?.mode) {
-            if (!isConnected || (isConnected && (connectedChainId !== chainId))) {
+            if (!isConnected || (isConnected && !!chainId && (connectedChainId !== chainId))) {
                 connectAndromedaClient(chainId);
             }
         }

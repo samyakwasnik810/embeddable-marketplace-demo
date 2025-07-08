@@ -3,12 +3,12 @@ import { Box, Divider, Flex, Link, Text, Image, Button, Heading, Textarea, Modal
 import { Share } from "lucide-react";
 import React, { FC } from "react";
 import useApp from "@/lib/app/hooks/useApp";
-import { useChainConfig } from "@/lib/graphql/hooks/chain";
 import { IBaseCollection } from "@/lib/app/types";
-import { useGetCw721Token, useGetCw721 } from "@/lib/graphql/hooks/cw721";
+import { useGetCw721Token, useGetCw721 } from "@/lib/andrjs/hooks/ado/cw721";
 import { LINKS } from "@/utils/links";
 import { CopyButton } from "@/modules/common/ui";
 import { truncate, truncateAddress } from "@/utils/text";
+import { useChainConfig } from "@/lib/andrjs/hooks/useChainConfig";
 
 interface OverviewProps {
   contractAddress: string;
@@ -35,8 +35,8 @@ const Overview: FC<OverviewProps> = (props) => {
   let explorerUrl = "";
   if (chainConfig?.blockExplorerAddressPages[0]) {
     explorerUrl += chainConfig?.blockExplorerAddressPages[0].replace('${address}', '');
-    if (cw721?.address) {
-      explorerUrl += cw721.address;
+    if (contractAddress) {
+      explorerUrl += contractAddress;
     }
   }
 
@@ -47,14 +47,14 @@ const Overview: FC<OverviewProps> = (props) => {
           Description
         </Text>
         <Text mt="4" fontWeight="light" fontSize="sm" data-testid="token-description">
-          {token?.metadata?.description}
+          {token?.metadata?.description ?? ""}
         </Text>
         <Text fontWeight="bold" fontSize="xl" mt="8">
           Details
         </Text>
         <Box mt="4" p="10" rounded="2xl" border="1px" borderColor="gray.300" data-testid="details-box">
           <Box display="flex" justifyContent="space-between" alignItems="center" pl={2} data-testid="collection-link">
-            <Link href={LINKS.collection(collection.id)}>{cw721?.contractInfo?.name}</Link>
+            <Link href={LINKS.collection(collection.id)}>{cw721?.name}</Link>
             <Flex justifyContent="flex-end">
               <Box display="inline-block" border="1px" borderColor="gray.300" borderRadius="md" px="9px" py="8px" ml="5px">
                 <Link href={collection.twitter} target={"_blank"}>
@@ -89,7 +89,7 @@ const Overview: FC<OverviewProps> = (props) => {
                   Token Id
                 </Text>
                 <Text fontWeight="light" fontSize="sm">
-                  {token?.tokenId}
+                  {tokenId}
                 </Text>
               </Flex>
               <Divider orientation="horizontal" my="4" />
@@ -98,7 +98,7 @@ const Overview: FC<OverviewProps> = (props) => {
                   Publisher
                 </Text>
                 <Text fontWeight="light" fontSize="sm">
-                  {token?.extension.publisher}
+                  {cw721.minter}
                 </Text>
               </Flex>
               <Divider orientation="horizontal" my="4" />
@@ -106,8 +106,8 @@ const Overview: FC<OverviewProps> = (props) => {
                 <Text fontWeight="bold" fontSize="sm">
                   Token URI
                 </Text>
-                <Link isExternal href={token?.token_uri} fontWeight="light" fontSize="sm">
-                  {truncate(token?.token_uri, [30, 12])}
+                <Link isExternal href={token?.token_uri ?? ""} fontWeight="light" fontSize="sm">
+                  {truncate(token?.token_uri ?? "", [30, 12])}
                 </Link>
               </Flex>
             </Box>

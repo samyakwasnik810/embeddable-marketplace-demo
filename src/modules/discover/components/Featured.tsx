@@ -1,6 +1,6 @@
 import useApp from "@/lib/app/hooks/useApp";
 import { ICollectionCw721 } from "@/lib/app/types";
-import { useGetCw721Token } from "@/lib/graphql/hooks/cw721";
+import { useGetCw721Token } from "@/lib/andrjs/hooks/ado/cw721";
 import FallbackImage from "@/modules/common/ui/Image/FallbackImage";
 import Cw721TokenAction from "@/modules/cw721/token/TokenAction";
 import { LINKS } from "@/utils/links";

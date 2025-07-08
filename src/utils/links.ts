@@ -14,5 +14,5 @@ const wrapPrefix = (path: string, appId?: string, chainId?: string) => {
         const params = new URLSearchParams(window.location.search)
         return `/preview${path}?${params}`
     }
-    return `/${chainId || configChainId}/${appId || id}${path}`
+    return `/app/${chainId || configChainId}/${appId || id}${path}`
 }

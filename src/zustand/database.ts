@@ -1,7 +1,7 @@
 "use client";
 import { APP_ENV } from "@/appEnv";
 import { IConfig } from "@/lib/app";
-import { getClient, getConfig } from "@/lib/database/get";
+import { getConfig } from "@/lib/database/get";
 import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { create } from "zustand";
 
@@ -30,7 +30,7 @@ export const resetDatabaseStore = () => {
 export const addDatabaseCacheConfig = async (key: string) => {
     try {
         let client = useDatabaseStore.getState().client!;
-        const config = await getConfig(client, key);
+        const config = await getConfig(key, await client.getChainId());
         useDatabaseStore.setState((prev) => ({
             ...prev,
             cache: {

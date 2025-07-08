@@ -1,5 +1,5 @@
 import { IBaseCollection } from "@/lib/app/types";
-import { useGetCw721Token } from "@/lib/graphql/hooks/cw721";
+import { useGetCw721Token } from "@/lib/andrjs/hooks/ado/cw721";
 import FallbackImage from "@/modules/common/ui/Image/FallbackImage";
 import { LINKS } from "@/utils/links";
 import { Box, Flex, HStack, Image, Text } from "@chakra-ui/react";

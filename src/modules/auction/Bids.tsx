@@ -2,30 +2,34 @@ import { ProfileIcon } from "@/modules/common/icons";
 import { Box, Divider, Flex, Link, Text } from "@chakra-ui/react";
 import React, { FC } from "react";
 import useApp from "@/lib/app/hooks/useApp";
-import { useChainConfig } from "@/lib/graphql/hooks/chain";
-import { useGetBids } from "@/lib/graphql/hooks/auction/useGetBids";
 import { truncateAddress } from "@/utils/text";
-import { IAuctionStateResponse } from "@andromedaprotocol/gql";
+import { trpcReactClient } from "@/lib/trpc/client";
+import { AUCTION } from "@/lib/andrjs/ados/auction";
 
 interface AuctionBidsProps {
-  auctionState: IAuctionStateResponse;
+  auctionState: AUCTION.GetLatestSaleStatePesponse;
   auctionAddress: string;
 }
 
 const AuctionBids: FC<AuctionBidsProps> = (props) => {
   const { auctionState, auctionAddress } = props;
   const { config } = useApp();
-  const { data: chainConfig } = useChainConfig(config.chainId);
-  const { data: bids } = useGetBids(
-    auctionAddress, Number(auctionState?.auction_id)
-  );
+  const { data: chainConfig } = trpcReactClient.chainConfig.byIdentifier.useQuery({
+    "chain-identifier": config.chainId
+  });
+  const { data: bids } = trpcReactClient.ado.auction.getBids.useQuery({
+    "contract-address": auctionAddress,
+    auctionId: auctionState?.auction_id?.toString() ?? "",
+  }, {
+    enabled: !!auctionAddress && !!auctionState?.auction_id
+  });
 
   return (
     <Box border="1px" borderColor="gray.300" borderRadius="15" p="10" data-testid="auction-bids">
-      {bids && [...bids].reverse().map((bid, index) => (
+      {bids && [...bids.bids].reverse().map((bid, index) => (
         <Box key={index} mt="4" data-testid={`auction-bid-${index}`}>
           <Flex justifyContent="space-between">
-            <Link 
+            <Link
               href={chainConfig?.blockExplorerAddressPages[0].replace('${address}', '') + bid.bidder}
               target="_blank"
               data-testid={`bidder-link-${index}`}

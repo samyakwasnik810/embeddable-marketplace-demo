@@ -1,5 +1,5 @@
 import { IMarketplaceCollection } from "@/lib/app/types";
-import { useGetTokenMarketplaceInfo } from "@/lib/graphql/hooks/marketplace";
+import { useGetTokenMarketplaceInfo } from "@/lib/andrjs/hooks/ado/marketplace";
 import MarketplaceStartStat from "@/modules/marketplace/MarketplaceStartStat";
 import { MoreHorizontalIcon } from "@/theme/icons";
 import { Box, Flex, IconButton, Menu, MenuButton, MenuItem, MenuList, Text } from "@chakra-ui/react";
@@ -32,7 +32,7 @@ const Cw721MarketplaceState: FC<Props> = (props) => {
                         Price
                     </Text>
                     <Text fontWeight="medium" fontSize="xs">
-                        {marketplace?.latestSaleState.price} {marketplace?.latestSaleState.coin_denom}
+                        {marketplace?.price} {marketplace?.coin_denom}
                     </Text>
                 </Box>
                 <Box>

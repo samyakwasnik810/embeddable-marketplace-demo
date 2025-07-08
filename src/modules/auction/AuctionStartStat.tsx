@@ -1,5 +1,5 @@
 import { IAuctionCollection } from "@/lib/app/types";
-import { useGetTokenAuctionState } from "@/lib/graphql/hooks/auction";
+import { trpcReactClient } from "@/lib/trpc/client";
 import { formatTime, getTime } from "@/utils/time";
 import { Badge, Flex, Text } from "@chakra-ui/react";
 import { Flame } from "lucide-react";
@@ -13,11 +13,13 @@ interface Props {
 const AuctionStartStat: FC<Props> = (props) => {
     const { collection, tokenId } = props;
     // Auction variables:
-    const { data: auctionState } = useGetTokenAuctionState(
-        collection.cw721,
-        collection.auction,
-        tokenId
-    );
+    const { data: auctionState } = trpcReactClient.ado.auction.getLatestAuctionState.useQuery({
+        tokenAddress: collection.cw721,
+        tokenId,
+        "contract-address": collection.auction
+    }, {
+        enabled: !!collection.cw721 && !!tokenId && !!collection.auction
+    });
 
     const startTime = getTime(auctionState?.start_time ?? {});
     const endTime = getTime(auctionState?.end_time ?? {});

@@ -1,9 +1,9 @@
 import { IBaseCollection, ICrowdfundCollection } from "@/lib/app/types";
-import { useGetCrowdfund } from "@/lib/graphql/hooks/crowdfund/useGetCrowdfund";
-import { useGetCw721 } from "@/lib/graphql/hooks/cw721";
+import { useGetCrowdfund } from "@/lib/andrjs/hooks/ado/crowdfund/useGetCrowdfund";
+import { useGetCw721 } from "@/lib/andrjs/hooks/ado/cw721";
 import { Box, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 import React, { FC } from "react";
-import CrowdfundGroupInfo from "./CrowdfundGroupInfo";
+// import CrowdfundGroupInfo from "./CrowdfundGroupInfo";
 
 interface HeaderProps {
     collection: ICrowdfundCollection;
@@ -11,7 +11,6 @@ interface HeaderProps {
 
 const Header: FC<HeaderProps> = (props) => {
     const { collection } = props;
-    const { data: crowdfund } = useGetCrowdfund(collection.crowdfund);
     const { data: cw721 } = useGetCw721(collection.cw721)
 
     return (
@@ -19,7 +18,7 @@ const Header: FC<HeaderProps> = (props) => {
             <GridItem colSpan={1} data-testid="header-left">
                 <Flex direction="column" gap="2" align="start" maxW="md">
                     <Text fontSize="2xl" fontWeight="bold" data-testid="collection-name">
-                        {cw721?.contractInfo?.name}
+                        {cw721?.name}
                     </Text>
                     <Text textStyle="light" fontSize="sm" data-testid="collection-minter">
                         Minter - <b>{cw721?.minter}</b>
@@ -30,10 +29,10 @@ const Header: FC<HeaderProps> = (props) => {
                 </Flex>
             </GridItem>
             <GridItem colSpan={1} data-testid="header-right">
-                <CrowdfundGroupInfo
+                {/* <CrowdfundGroupInfo
                     collection={collection}
                     collectionName={collection.name}
-                />
+                /> */}
             </GridItem>
         </Grid>
     );

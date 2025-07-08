@@ -1,6 +1,6 @@
 "use client";
 import { IAuctionCollection, useAppUtils } from "@/lib/app";
-import { useGetCw721Token } from "@/lib/graphql/hooks/cw721";
+import { trpcReactClient } from "@/lib/trpc/client";
 import Cw721TokenPage from "@/modules/cw721/token";
 import { notFound } from 'next/navigation'
 import React, { FC } from "react"
@@ -17,7 +17,12 @@ const Page: FC<Props> = (props) => {
     const tokenId = decodeURI(_tokenId);
     const { getCollection } = useAppUtils();
     const collection = getCollection(collectionId) as IAuctionCollection;
-    const { error } = useGetCw721Token(collection?.cw721 ?? '', tokenId);
+    const { error } = trpcReactClient.ado.cw721.getTokenInfo.useQuery({
+        tokenId,
+        "contract-address": collection.cw721
+    }, {
+        enabled: !!collection.cw721 && !!tokenId
+    })
     if (error) {
         return notFound()
     }

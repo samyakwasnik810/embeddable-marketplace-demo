@@ -1,14 +1,14 @@
 import { FC, memo, useEffect, useMemo, useState } from "react";
-import { Coin, StdFee } from "@cosmjs/stargate";
+import { calculateFee, Coin, StdFee } from "@cosmjs/stargate";
 
 import { useGlobalModalContext } from "../hooks";
 import { TransactionModalProps } from "../types";
 
 import { Box, Button, Center, Divider, Text } from "@/theme/ui-elements";
 import ModalLoading from "./ModalLoading";
-import { sumCoins } from "@/lib/andrjs/utils/funds";
 import { GasIcon } from "@/modules/common/icons";
 import useAndromedaClient from "@/lib/andrjs/hooks/useAndromedaClient";
+import { sumCoins } from "@/lib/andrjs/utils";
 // import { useCurrentChainConfig } from "@/lib/andrjs/hooks/useKeplrChainConfig";
 // import { CoinPretty } from "@keplr-wallet/unit";
 
@@ -76,13 +76,14 @@ const EstimateFeeModal: FC<TransactionModalProps & OptionalProps> = (props) => {
   useEffect(() => {
     const simulateFee = async () => {
       setLoading(true);
-      const getFee = () => {
+      const getFee = async () => {
         console.log(client);
-        return client!.estimateExecuteFee(
+        const fee = await client!.simulateExecute(
           props.contractAddress,
           props.msg,
           props.funds,
         );
+        return calculateFee(fee!, client!.gasPrice!);
       }
 
       try {
@@ -184,7 +185,7 @@ const EstimateFeeModal: FC<TransactionModalProps & OptionalProps> = (props) => {
                 text="Funds"
               />
             ))}
-            {totalFunds && <FeeAmount coin={totalFunds} text="Total Funds" />}
+            {totalFunds && <FeeAmount coin={totalFunds[0]} text="Total Funds" />}
           </Box>
 
           <Box

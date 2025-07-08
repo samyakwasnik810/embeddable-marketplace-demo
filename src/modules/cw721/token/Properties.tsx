@@ -1,10 +1,10 @@
-import { INftMetadata } from "@andromedaprotocol/gql";
+import { UriDataType } from "@/lib/trpc/router/ados/cw721/types";
 import { Box, Divider, Flex, Icon, Link, Text } from "@chakra-ui/react";
 import React, { FC } from "react";
 
 
 interface PropertiesProps {
-    metadata: INftMetadata;
+    metadata: UriDataType;
 }
 
 const Properties: FC<PropertiesProps> = (props) => {

@@ -6,14 +6,13 @@ export enum ModalType {
   Transaction = "transaction",
   PlaceBid = "placebid",
   BuyNow = "buynow",
-  CrowdfundGroupBuy = 'crowdfundgroupbuy',
-  ExchangeConfirm = 'exchangeconfirm'
+  // CrowdfundGroupBuy = 'crowdfundgroupbuy',
+  ExchangeConfirm = "exchangeconfirm",
 }
 
 export interface WalletModalProps {
   modalType: ModalType.Wallet;
 }
-
 
 export interface PlaceBidModalProps {
   modalType: ModalType.PlaceBid;
@@ -29,10 +28,10 @@ export interface BuyNowModalProps {
   tokenId: string;
 }
 
-export interface CrowdfundGroupBuyModalProps {
-  crowdfundAddress: string;
-  modalType: ModalType.CrowdfundGroupBuy;
-}
+// export interface CrowdfundGroupBuyModalProps {
+//   crowdfundAddress: string;
+//   modalType: ModalType.CrowdfundGroupBuy;
+// }
 
 export interface TransactionModalProps {
   contractAddress: string;
@@ -41,16 +40,22 @@ export interface TransactionModalProps {
   msg: Msg;
   modalType: ModalType.Transaction;
   fee?: Fee;
-  memo?: string
+  memo?: string;
 }
 
 export interface ExchangeConfirmModalProps {
   exchangeAddress: string;
   modalType: ModalType.ExchangeConfirm;
-  exchangeRate: number,
-  nativeAmount: number,
-  nativeDenom: string,
-  cw20Symbol: string,
+  exchangeRate: number;
+  nativeAmount: number;
+  nativeDenom: string;
+  cw20Symbol: string;
 }
 
-export type ModalProps = WalletModalProps | TransactionModalProps | PlaceBidModalProps | BuyNowModalProps | CrowdfundGroupBuyModalProps | ExchangeConfirmModalProps
+export type ModalProps =
+  | WalletModalProps
+  | TransactionModalProps
+  | PlaceBidModalProps
+  | BuyNowModalProps
+  // | CrowdfundGroupBuyModalProps
+  | ExchangeConfirmModalProps;

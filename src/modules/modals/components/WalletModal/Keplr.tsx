@@ -42,7 +42,7 @@ const KeplrWallet: FC<Props> = (props) => {
                 )}
             </VStack>
             {keplrStatus !== KeplrConnectionStatus.NotInstalled ? (
-                <Button isLoading={keplrStatus === KeplrConnectionStatus.Connecting || isLoading} onClick={() => connectAndromedaClient(chainId)} size='sm' colorScheme="primary">Connect Wallet</Button>
+                <Button isLoading={keplrStatus === KeplrConnectionStatus.Connecting || isLoading} onClick={() => connectAndromedaClient(chainId ?? null)} size='sm' colorScheme="primary">Connect Wallet</Button>
             ) : isSupported ? (
                 <IconButton as='a' target='_blank' href={KEPLR_LINK} aria-label="install-keplr" icon={<Icon as={ChevronRightIcon} boxSize='5' />} size='sm' colorScheme="primary" />
             ) :

@@ -1,4 +1,4 @@
-import { useGetCw721Token, useGetCw721Tokens } from "@/lib/graphql/hooks/cw721";
+import { useGetCw721Token, useGetCw721Tokens } from "@/lib/andrjs/hooks/ado/cw721";
 import { Box, GridItem, SimpleGrid, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react";
 import React, { FC } from "react";
 import Cw721TokenCard from "../components/Cw721TokenCard";

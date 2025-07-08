@@ -1,5 +1,5 @@
 import { IAuctionCollection } from "@/lib/app/types";
-import { useGetTokenAuctionState } from "@/lib/graphql/hooks/auction";
+import { useGetTokenAuctionState } from "@/lib/andrjs/hooks/ado/auction";
 import AuctionStartStat from "@/modules/auction/AuctionStartStat";
 import { MoreHorizontalIcon } from "@/theme/icons";
 import { Box, Flex, HStack, IconButton, Menu, MenuButton, MenuItem, MenuList, Text } from "@chakra-ui/react";

@@ -1,5 +1,5 @@
 import { IBaseCollection } from "@/lib/app/types";
-import { useGetCw721 } from "@/lib/graphql/hooks/cw721";
+import { useGetCw721 } from "@/lib/andrjs/hooks/ado/cw721";
 import { Box, Flex, Grid, GridItem, HStack, Text } from "@chakra-ui/react";
 import React, { FC } from "react";
 
@@ -16,7 +16,7 @@ const Header: FC<HeaderProps> = (props) => {
       <GridItem colSpan={1}>
         <Flex direction="column" gap="2" align="start" maxW="md">
           <Text fontSize="2xl" fontWeight="bold">
-            {cw721?.contractInfo.name}
+            {cw721?.name}
           </Text>
           <Text textStyle="light" fontSize="sm">
             Minter - <b>{cw721?.minter}</b>

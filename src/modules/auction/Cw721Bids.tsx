@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import { useGetTokenAuctionState } from "@/lib/graphql/hooks/auction";
 import AuctionBids from "./Bids";
+import { trpcReactClient } from "@/lib/trpc/client";
 
 
 interface Cw721AuctionBidsProps {
@@ -10,11 +10,13 @@ interface Cw721AuctionBidsProps {
 }
 const Cw721AuctionBids: FC<Cw721AuctionBidsProps> = (props) => {
     const { auctionAddress, tokenId, tokenAddress } = props;
-    const { data: auctionState } = useGetTokenAuctionState(
+    const { data: auctionState } = trpcReactClient.ado.auction.getLatestAuctionState.useQuery({
         tokenAddress,
-        auctionAddress,
-        tokenId
-    );
+        tokenId,
+        "contract-address": auctionAddress
+    }, {
+        enabled: !!auctionAddress && !!tokenId && !!tokenAddress
+    });
 
     if (!auctionState) return null;
 

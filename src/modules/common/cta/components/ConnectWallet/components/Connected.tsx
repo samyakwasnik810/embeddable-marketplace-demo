@@ -1,4 +1,4 @@
-import useQueryChain from "@/lib/graphql/hooks/chain/useChainConfig";
+import { trpcReactClient } from "@/lib/trpc/client";
 import {
   ChevronDownIcon,
   CopyIcon,
@@ -26,9 +26,11 @@ import React, { FC } from "react";
 interface ConnectedProps { }
 const Connected: FC<ConnectedProps> = (props) => {
   const { } = props;
-  const { accounts, chainId } = useAndromedaStore();
+  const { accounts, connectedChain } = useAndromedaStore();
   const account = accounts[0];
-  const { data: config } = useQueryChain(chainId);
+  const { data: config } = trpcReactClient.chainConfig.byIdentifier.useQuery({
+    'chain-identifier': connectedChain,
+  });
 
   return (
     <Popover placement="bottom-end">

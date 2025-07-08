@@ -1,6 +1,4 @@
-import { usePlaceBidConstruct } from "@/lib/andrjs";
 import useApp from "@/lib/app/hooks/useApp";
-import { useGetTokenAuctionState } from "@/lib/graphql/hooks/auction";
 import { NumberInput } from "@/modules/common/ui";
 import {
   Box,
@@ -16,26 +14,37 @@ import { coins } from "@cosmjs/proto-signing";
 import { FC, useState } from "react";
 import { useExecuteModal } from "../hooks";
 import { PlaceBidModalProps } from "../types";
-import { useGetCw721Token } from "@/lib/graphql/hooks/cw721";
+import { trpcReactClient } from "@/lib/trpc/client";
+import { AUCTION } from "@/lib/andrjs/ados/auction";
 
 const PlaceBidModal: FC<PlaceBidModalProps> = (props) => {
   const { contractAddress, tokenId, auctionAddress } = props;
-  const { data: token } = useGetCw721Token(contractAddress, tokenId);
-  const { data: auctionState } = useGetTokenAuctionState(
-    contractAddress,
-    auctionAddress,
-    tokenId
-  );
+  const { data: token } = trpcReactClient.ado.cw721.getTokenInfo.useQuery({
+    "contract-address": contractAddress,
+    tokenId,
+  });
+  const { data: tokenData } = trpcReactClient.ado.cw721.fetchTokenData.useQuery({
+    token_uri: token?.token_uri ?? ""
+  }, {
+    enabled: !!token?.token_uri
+  });
+
+  const { data: auctionState } = trpcReactClient.ado.auction.getLatestAuctionState.useQuery({
+    tokenAddress: contractAddress,
+    tokenId,
+    "contract-address": auctionAddress
+  }, {
+    enabled: !!contractAddress && !!tokenId && !!auctionAddress
+  });
   const { config } = useApp();
-  const construct = usePlaceBidConstruct();
 
   // Execute place bid directly on auction
   const openExecute = useExecuteModal(auctionAddress);
 
   const MIN_BID = Math.max(
     0,
-    auctionState?.min_bid ?? 0,
-    auctionState?.high_bidder_amount ?? 0
+    Number(auctionState?.min_bid ?? 0),
+    Number(auctionState?.high_bidder_amount ?? 0)
   );
 
   const DENOM = auctionState?.coin_denom ?? config?.coinDenom ?? "ujunox";
@@ -43,7 +52,7 @@ const PlaceBidModal: FC<PlaceBidModalProps> = (props) => {
   const [amount, setAmount] = useState(MIN_BID);
 
   const onSubmit = () => {
-    const msg = construct({ tokenAddress: contractAddress, tokenId: tokenId });
+    const msg = AUCTION.placeBidMsg({ tokenAddress: contractAddress, tokenId: tokenId });
     const funds = coins(amount, DENOM);
     openExecute(msg, true, funds);
   };
@@ -54,7 +63,7 @@ const PlaceBidModal: FC<PlaceBidModalProps> = (props) => {
         Place Bid
       </Heading>
       <Text textStyle="light" mb="4">
-        You are about to place bid for <b>{token?.metadata?.name}</b>
+        You are about to place bid for <b>{tokenData?.name ?? "Unknown"}</b>
         <br />
         Token Id: {tokenId}
         <br />

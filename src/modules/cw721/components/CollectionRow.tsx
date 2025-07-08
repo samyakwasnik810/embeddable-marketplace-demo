@@ -11,7 +11,7 @@ import Link from "next/link";
 import React, { FC } from "react";
 import CollectionRowToken from "./CollectionRowToken";
 import { useAppUtils } from "@/lib/app/hooks";
-import { useGetCw721Tokens } from "@/lib/graphql/hooks/cw721";
+import { useGetCw721Tokens } from "@/lib/andrjs/hooks/ado/cw721";
 import { IAuctionCollection } from "@/lib/app/types";
 
 interface Cw721CollectionRowProps {

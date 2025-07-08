@@ -12,7 +12,7 @@ import {
 import { Flame, Share } from "lucide-react";
 import React, { FC } from "react";
 import { BuyNowButton } from "../common/cta/components/buynow";
-import { useGetTokenMarketplaceInfo } from "@/lib/graphql/hooks/marketplace";
+import { useGetTokenMarketplaceInfo } from "@/lib/andrjs/hooks/ado/marketplace";
 import MarketplaceStartStat from "./MarketplaceStartStat";
 
 interface MarketplaceInfoProps {
@@ -66,7 +66,7 @@ const MarketplaceInfo: FC<MarketplaceInfoProps> = (props) => {
         </SimpleGrid>
         <Divider my="4" />
         <BuyNowButton
-          disabled={marketplaceState?.latestSaleState.status !== "open"}
+          disabled={marketplaceState?.status !== "open"}
           contractAddress={collection.cw721}
           marketplaceAddress={collection.marketplace}
           tokenId={tokenId}

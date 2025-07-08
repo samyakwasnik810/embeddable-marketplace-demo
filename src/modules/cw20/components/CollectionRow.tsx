@@ -11,11 +11,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import { useAppUtils } from "@/lib/app/hooks";
-import { useGetSaleAssets } from "@/lib/graphql/hooks/exchange";
+import { useGetSaleAssets } from "@/lib/andrjs/hooks/ado/exchange";
 import { IExchangeCollection } from "@/lib/app/types";
-import { useGetCw20, useGetCw20MarketingInfo } from "@/lib/graphql/hooks/cw20";
+import { useGetCw20, useGetCw20MarketingInfo } from "@/lib/andrjs/hooks/ado/cw20";
 import FallbackImage from "@/modules/common/ui/Image/FallbackImage";
 
 interface Cw20CollectionRowProps {
@@ -28,15 +28,21 @@ const Cw20CollectionRow: FC<Cw20CollectionRowProps> = (props) => {
   const collection = getCollection(collectionId) as IExchangeCollection;
 
   const { data: token } = useGetCw20(collection.cw20);
-  const { data: tokenInfo } = useGetCw20MarketingInfo(collection.cw20);
-  const { data: exchange } = useGetSaleAssets(collection.exchange);
+  const { data: marketing } = useGetCw20MarketingInfo(collection.cw20);
+  const { data: saleAssets } = useGetSaleAssets(collection.exchange);
+
+  const logo = useMemo(() => {
+    if (!marketing || !marketing.logo) return null;
+    if (typeof marketing.logo === "object" && "url" in marketing.logo) return marketing.logo.url;
+    return marketing.logo;
+  }, [marketing?.logo]);
 
   return (
     <Box p="12" rounded="2xl" bg="gray.100" data-testid="cw20-collection-row">
       <SimpleGrid columns={4} spacing="6">
         <GridItem data-testid="collection-logo">
           <FallbackImage
-            src={tokenInfo?.marketingInfo?.logo?.url}
+            src={logo || "/fallback-cw20.png"}
             alt="Image"
             borderRadius="lg"
             cursor='pointer'
@@ -74,7 +80,7 @@ const Cw20CollectionRow: FC<Cw20CollectionRowProps> = (props) => {
                   Token Name
                 </Text>
                 <Text fontWeight="light" fontSize="sm">
-                  {token?.tokenInfo?.name}
+                  {token?.name}
                 </Text>
               </Flex>
               <Divider orientation="horizontal" my="4" />
@@ -83,7 +89,7 @@ const Cw20CollectionRow: FC<Cw20CollectionRowProps> = (props) => {
                   Symbol
                 </Text>
                 <Text fontWeight="light" fontSize="sm">
-                  {token?.tokenInfo?.symbol}
+                  {token?.symbol}
                 </Text>
               </Flex>
               <Divider orientation="horizontal" my="4" />
@@ -92,7 +98,7 @@ const Cw20CollectionRow: FC<Cw20CollectionRowProps> = (props) => {
                   You can buy this token with
                 </Text>
                 <HStack spacing={3}>
-                  {exchange?.saleAssets?.map(asset => (
+                  {saleAssets?.assets?.map(asset => (
                     <Badge
                       key={asset}
                       variant="subtle"

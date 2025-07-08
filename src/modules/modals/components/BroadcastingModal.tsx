@@ -11,7 +11,7 @@ import type {
 import { truncate } from "@/utils/text";
 import useAndromedaClient from "@/lib/andrjs/hooks/useAndromedaClient";
 import { useAndromedaStore } from "@/zustand/andromeda";
-import useQueryChain from "@/lib/graphql/hooks/chain/useChainConfig";
+import { useChainConfig } from "@/lib/andrjs/hooks/useChainConfig";
 
 interface OptionalProps {
   onNextStage?: () => void;
@@ -21,8 +21,8 @@ const BroadcastingModal: FC<TransactionModalProps & OptionalProps> = memo(
   function BroadcastingModal(props) {
     const [loading, setLoading] = useState<boolean>(true);
     const client = useAndromedaClient();
-    const { chainId } = useAndromedaStore();
-    const { data: chainConfig } = useQueryChain(chainId);
+    const { connectedChain } = useAndromedaStore();
+    const { data: chainConfig } = useChainConfig(connectedChain);
     const { close, setError } = useGlobalModalContext();
     const [result, setResult] = useState<
       ExecuteResult | InstantiateResult | undefined

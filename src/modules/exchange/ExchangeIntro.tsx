@@ -1,9 +1,9 @@
-import useQueryChain from "@/lib/graphql/hooks/chain/useChainConfig";
-import { useGetCw20MarketingInfo } from "@/lib/graphql/hooks/cw20";
+import { useGetCw20MarketingInfo } from "@/lib/andrjs/hooks/ado/cw20";
 import { useAndromedaStore } from "@/zustand/andromeda";
 import { Flex, Text, Button, Link } from "@chakra-ui/react";
 import React, { FC } from "react";
 import PromiseButton from "../common/ui/PromiseButton";
+import { useChainConfig } from "@/lib/andrjs/hooks/useChainConfig";
 
 interface ExchangeIntroProps {
   cw20: string;
@@ -13,8 +13,8 @@ interface ExchangeIntroProps {
 
 const ExchangeIntro: FC<ExchangeIntroProps> = (props) => {
   const { cw20 } = props;
-  const { accounts, chainId } = useAndromedaStore();
-  const { data: chainConfig } = useQueryChain(chainId);
+  const { connectedChain } = useAndromedaStore();
+  const { data: chainConfig } = useChainConfig(connectedChain);
   const { data: tokenInfo } = useGetCw20MarketingInfo(cw20);
 
 
@@ -25,9 +25,9 @@ const ExchangeIntro: FC<ExchangeIntroProps> = (props) => {
           Buy and sell CW20 tokens on {chainConfig?.chainName} Chain
         </Text>
         <Text fontWeight="light" fontSize="md" mt="2" mb="2" data-testid="intro-description">
-          {tokenInfo?.marketingInfo?.description}
+          {tokenInfo?.description}
         </Text>
-        <Link href={tokenInfo?.marketingInfo?.project} target="_blank" data-testid="learn-more-link">
+        <Link href={tokenInfo?.project ?? ""} target="_blank" data-testid="learn-more-link">
           <PromiseButton width={"fit-content"} backgroundColor={"gray.900"} paddingX={12} data-testid="learn-more-button">
             Learn more
           </PromiseButton>

@@ -11,9 +11,7 @@
     "tsc": "tsc"
   },
   "dependencies": {
-    "@andromedaprotocol/andromeda.js": "^0.3.8-beta.4",
-    "@andromedaprotocol/gql": "^0.3.8-beta.4",
-    "@apollo/client": "^3.7.0",
+    "@andromedaprotocol/andromeda.js": "^2.0.0",
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/next-js": "^2.1.5",
     "@chakra-ui/react": "^2.8.1",
@@ -21,20 +19,26 @@
     "@cosmjs/cosmwasm-stargate": "^0.32.3",
     "@cosmjs/proto-signing": "^0.32.3",
     "@cosmjs/stargate": "^0.32.3",
+    "@epic-web/cachified": "^5.5.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@tanstack/react-query": "^5.60.6",
+    "@tanstack/react-query": "^5.71.5",
+    "@trpc/client": "^11.0.1",
+    "@trpc/react-query": "^11.0.1",
+    "@trpc/server": "^11.0.1",
     "axios": "^1.5.1",
     "dayjs": "^1.11.6",
     "framer-motion": "^10.16.4",
     "graphql": "^16.6.0",
     "jsoncrush": "^1.1.8",
     "lucide-react": "^0.90.0",
+    "lru-cache": "^11.1.0",
     "next": "^13.5.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "superjson": "^2.2.2",
     "zod": "^3.24.1",
-    "zustand": "^4.4.1"
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@keplr-wallet/types": "^0.12.76",
@@ -45,6 +49,6 @@
     "eslint": "8.23.1",
     "eslint-config-next": "^13.5.2",
     "prettier": "^3.0.3",
-    "typescript": "4.8.3"
+    "typescript": "^5.8.2"
   }
 }

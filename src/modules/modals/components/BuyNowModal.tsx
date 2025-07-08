@@ -1,4 +1,3 @@
-import { useBuyNowConstruct } from "@/lib/andrjs";
 import useApp from "@/lib/app/hooks/useApp";
 import {
   Box,
@@ -15,10 +14,11 @@ import { Coin, coin } from "@cosmjs/proto-signing";
 import { FC } from "react";
 import { useExecuteModal } from "../hooks";
 import { BuyNowModalProps } from "../types";
-import { useGetTokenMarketplaceInfo } from "@/lib/graphql/hooks/marketplace";
-import { useGetCw721Token } from "@/lib/graphql/hooks/cw721";
-import { useGetRate } from "@/lib/andrjs/hooks/ado/useGetRate";
-import { addCoins } from "@cosmjs/amino";
+import { useGetTokenMarketplaceInfo } from "@/lib/andrjs/hooks/ado/marketplace";
+import { useGetCw721Token } from "@/lib/andrjs/hooks/ado/cw721";
+import { useGetRate } from "@/lib/andrjs/hooks/ado/rates";
+import { sumCoins } from "@/lib/andrjs/utils";
+import useBuyNowConstruct from "@/lib/andrjs/hooks/useBuyNowConstruct";
 
 
 const BuyNowModal: FC<BuyNowModalProps> = (props) => {
@@ -30,13 +30,14 @@ const BuyNowModal: FC<BuyNowModalProps> = (props) => {
     tokenId
   );
 
-  const { data: rate } = useGetRate(marketplaceAddress, "Buy")
-  const rateValue = rate?.local.value;
-  const rateType = rate?.local.rate_type
+  const { data: rate } = useGetRate(marketplaceAddress, "Buy");
+  const localRate = rate && "local" in rate ? rate.local : undefined;
+  const rateValue = localRate?.value;
+  const rateType = localRate?.rate_type
   const flatRate = (rateValue && "flat" in rateValue) ? rateValue.flat : undefined;
   const flatRateDenom = flatRate?.denom;
   const percentRate = (rateValue && "percent" in rateValue) ? rateValue.percent : undefined
-  const marketplaceAmount = marketplaceState?.latestSaleState.price
+  const marketplaceAmount = marketplaceState?.price
   const floatMarketplaceAmount = parseFloat(marketplaceAmount ?? "0")
   const commaSeparatedAmount = Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(floatMarketplaceAmount)
 
@@ -50,13 +51,13 @@ const BuyNowModal: FC<BuyNowModalProps> = (props) => {
       const percentAmount = parseFloat(percentRate.percent) * floatMarketplaceAmount
       return {
         amount: percentAmount.toFixed(0),
-        denom: marketplaceState!.latestSaleState.coin_denom
+        denom: marketplaceState!.coin_denom
       }
     }
   }
 
   const { config } = useApp();
-  const DENOM = marketplaceState?.latestSaleState.coin_denom ?? config?.coinDenom ?? "ujunox";
+  const DENOM = marketplaceState?.coin_denom ?? config?.coinDenom ?? "ujunox";
   const rateCoin = calcAmount();
   const rateCoinAmount = parseFloat(rateCoin?.amount ?? "0")
   const commaSeparatedRateCoinAmount = Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(rateCoinAmount)
@@ -171,15 +172,3 @@ export default BuyNowModal;
 
 
 
-export const sumCoins = (coins: Coin[]) => {
-  if (coins.length === 0) return undefined;
-  const mapped_coins: Record<string, Coin> = {};
-  coins.forEach(coin => {
-    if (!mapped_coins[coin.denom]) {
-      mapped_coins[coin.denom] = coin;
-    } else {
-      mapped_coins[coin.denom] = addCoins(mapped_coins[coin.denom], coin);
-    }
-  })
-  return Object.values(mapped_coins);
-};

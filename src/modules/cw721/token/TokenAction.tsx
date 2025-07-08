@@ -1,7 +1,7 @@
 import { ICollectionCw721, ICollectionType } from "@/lib/app/types";
-import { useGetCw721, useGetCw721Token } from "@/lib/graphql/hooks/cw721";
+import { useGetCw721, useGetCw721Token } from "@/lib/andrjs/hooks/ado/cw721";
 import AuctionInfo from "@/modules/auction/AuctionInfo";
-import CrowdfundInfo from "@/modules/crowdfund/CrowdfundInfo";
+// import CrowdfundInfo from "@/modules/crowdfund/CrowdfundInfo";
 import MarketplaceInfo from "@/modules/marketplace/MarketplaceInfo";
 import React, { FC } from "react"
 
@@ -18,7 +18,7 @@ const Cw721TokenAction: FC<Props> = (props) => {
     if (collection.type === ICollectionType["embeddables-auction"]) return (
         <AuctionInfo
             collection={collection}
-            collectionName={cw721?.contractInfo.name ?? 'Loading...'}
+            collectionName={cw721?.name ?? 'Loading...'}
             tokenId={tokenId}
             name={token?.metadata?.name ?? tokenId}
         />
@@ -26,17 +26,18 @@ const Cw721TokenAction: FC<Props> = (props) => {
     if (collection.type === ICollectionType["embeddables-marketplace"]) return (
         <MarketplaceInfo
             collection={collection}
-            collectionName={cw721?.contractInfo.name ?? 'Loading...'}
+            collectionName={cw721?.name ?? 'Loading...'}
             tokenId={tokenId}
             name={token?.metadata?.name ?? tokenId}
         />
     )
-    if (collection.type === ICollectionType["embeddables-crowdfund"]) return (
-        <CrowdfundInfo
-            collection={collection}
-            collectionName={cw721?.contractInfo.name ?? 'Loading...'}
-        />
-    )
+
+    // if (collection.type === ICollectionType["embeddables-crowdfund"]) return (
+    //     <CrowdfundInfo
+    //         collection={collection}
+    //         collectionName={cw721?.name ?? 'Loading...'}
+    //     />
+    // )
     return null;
 }
 

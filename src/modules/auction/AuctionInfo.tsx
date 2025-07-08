@@ -1,5 +1,4 @@
 import { IAuctionCollection } from "@/lib/app/types";
-import { useGetTokenAuctionState } from "@/lib/graphql/hooks/auction";
 import { PlaceBidButton } from "@/modules/common/cta";
 import { formatTime, getTime } from "@/utils/time";
 import {
@@ -15,6 +14,7 @@ import dayjs from "dayjs";
 import { Flame, Share } from "lucide-react";
 import React, { FC, useEffect, useMemo, useState } from "react";
 import AuctionStartStat from "./AuctionStartStat";
+import { trpcReactClient } from "@/lib/trpc/client";
 
 interface AuctionInfoProps {
   tokenId: string;
@@ -26,12 +26,14 @@ interface AuctionInfoProps {
 const AuctionInfo: FC<AuctionInfoProps> = (props) => {
   const { tokenId, collection, name } = props;
 
-  // Auction variables:
-  const { data: auctionState } = useGetTokenAuctionState(
-    collection.cw721,
-    collection.auction,
-    tokenId
-  );
+
+  const { data: auctionState } = trpcReactClient.ado.auction.getLatestAuctionState.useQuery({
+    tokenAddress: collection.cw721,
+    tokenId,
+    "contract-address": collection.auction
+  }, {
+    enabled: !!collection.auction && !!tokenId && !!collection.cw721
+  })
 
   const startTime = getTime(auctionState?.start_time ?? {});
   const endTime = getTime(auctionState?.end_time ?? {});

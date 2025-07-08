@@ -12,17 +12,17 @@ interface Props {
 const DefaultApp: FC<Props> = (props) => {
     const { } = props;
     const isConnected = useAndromedaStore(state => state.isConnected)
-    const chainId = useAndromedaStore(state => state.chainId)
+    const chainId = useAndromedaStore(state => state.connectedChain)
     const isLoading = useAndromedaStore(state => state.isLoading)
     const keplr = useAndromedaStore(state => state.keplr)
+    const autoconnect = useAndromedaStore(state => state.autoconnect)
 
     useEffect(() => {
         initiateKeplr();
     }, []);
 
     useEffect(() => {
-        const autoconnect = localStorage.getItem(KEPLR_AUTOCONNECT_KEY);
-        if (!isLoading && typeof keplr !== "undefined" && autoconnect === keplr?.mode) {
+        if (!isLoading && typeof keplr !== "undefined" && autoconnect) {
             if (!isConnected || (isConnected && chainId !== APP_ENV.DEFAULT_CONFIG.chainId)) {
                 connectAndromedaClient(APP_ENV.DEFAULT_CONFIG.chainId);
             }

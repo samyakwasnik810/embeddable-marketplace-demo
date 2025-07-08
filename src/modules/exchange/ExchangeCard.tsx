@@ -3,15 +3,15 @@ import React, { ChangeEvent, FC, useMemo } from "react";
 import ExchangeInput from "./ExchangeInput";
 import { ArrowDownIcon } from "@/modules/common/icons";
 import ExchangeCardSummary from "./ExchangeCardSummary";
-import { useGetSaleInfo } from "@/lib/graphql/hooks/exchange";
+import { useGetSaleInfo } from "@/lib/andrjs/hooks/ado/exchange";
 import useExchangeConfirmModal from "@/modules/modals/hooks/useExchangeConfirmModal";
 import useApp from "@/lib/app/hooks/useApp";
 import { formatNumber } from "@/utils/number";
 import { useAndromedaStore } from "@/zustand/andromeda";
-import useQueryChain from "@/lib/graphql/hooks/chain/useChainConfig";
-import { useGetCw20Balance } from "@/lib/graphql/hooks/cw20";
-import { useGetBalance } from "@/lib/andrjs";
+import { useGetCw20, useGetCw20Balance, useGetCw20MarketingInfo } from "@/lib/andrjs/hooks/ado/cw20";
 import { ConnectWallet } from "../common/cta";
+import useGetBalance from "@/lib/andrjs/hooks/useGetBalance";
+import { useChainConfig } from "@/lib/andrjs/hooks/useChainConfig";
 
 interface ExchangeCardProps {
   handleAndrInput: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -23,28 +23,30 @@ interface ExchangeCardProps {
 const ExchangeCard: FC<ExchangeCardProps> = (props) => {
   const { handleAndrInput, nativeAmount, exchange, cw20 } = props;
   const { config } = useApp();
-  const { accounts, chainId } = useAndromedaStore();
+  const { accounts, connectedChain } = useAndromedaStore();
   const account = accounts[0];
   const { balance } = useGetBalance(config.coinDenom, account?.address);
-  const { data: chainConfig } = useQueryChain(chainId);
-  const { data, loading, error } = useGetSaleInfo(exchange, cw20, balance.denom);
+  const { data: chainConfig } = useChainConfig(connectedChain);
+  const { data: saleInfo } = useGetSaleInfo(exchange, balance.denom);
   const { data: cw20_balance } = useGetCw20Balance(cw20, account?.address);
+  const { data: cw20Marketing } = useGetCw20MarketingInfo(cw20);
+  const { data: cw20Data } = useGetCw20(cw20);
 
   const { symbol, total_amount, amount, exchange_rate, cw20_url, cw20_decimals } = useMemo(() => {
-    let logo = JSON.parse(JSON.stringify(data?.cw20.marketingInfo?.logo) || "{}");
-    let decimals = data?.cw20.tokenInfo.decimals || 0;
+    let logo = JSON.parse(JSON.stringify(cw20Marketing?.logo) || "{}");
+    let decimals = cw20Data?.decimals || 0;
     let divider = 10 ** decimals;
-    let total_amount = (data?.cw20.tokenInfo.total_supply || 0) / divider;
-    let amount = (data?.cw20_exchange?.sale?.amount || 0) / divider;
+    let total_amount = (Number(cw20Data?.total_supply) || 0) / divider;
+    let amount = (Number(saleInfo?.remaining_amount) || 0) / divider;
     return {
       cw20_decimals: decimals,
-      symbol: data?.cw20.tokenInfo?.symbol || "",
+      symbol: cw20Data?.symbol || "",
       total_amount: total_amount,
       amount: amount,
-      exchange_rate: data?.cw20_exchange?.sale?.exchange_rate || 0,
+      exchange_rate: Number(saleInfo?.exchange_rate) || 0,
       cw20_url: logo && logo["url"]
     };
-  }, [data]);
+  }, [saleInfo, cw20Data, cw20Marketing]);
 
   const open = useExchangeConfirmModal({
     cw20Symbol: symbol,
@@ -95,7 +97,7 @@ const ExchangeCard: FC<ExchangeCardProps> = (props) => {
             rate={exchange_rate}
             estimatedCost={nativeAmount}
             balance={balance}
-            cw20_balance={cw20_balance || 0}
+            cw20_balance={Number(cw20_balance?.balance || "0")}
             cw20_decimals={cw20_decimals || 0}
             targetSymbol={symbol}
           />

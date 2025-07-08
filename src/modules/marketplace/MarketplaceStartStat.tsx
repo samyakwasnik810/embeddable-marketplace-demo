@@ -1,5 +1,5 @@
 import { IMarketplaceCollection } from "@/lib/app/types";
-import { useGetTokenMarketplaceInfo } from "@/lib/graphql/hooks/marketplace";
+import { useGetTokenMarketplaceInfo } from "@/lib/andrjs/hooks/ado/marketplace";
 import { Badge, Flex } from "@chakra-ui/react";
 import React, { FC } from "react";
 
@@ -16,8 +16,8 @@ const MarketplaceStartStat: FC<Props> = (props) => {
         tokenId
     );
 
-    const isOpen = marketplaceState?.latestSaleState?.status === 'open';
-    const isClosed = marketplaceState?.latestSaleState?.status === 'executed';
+    const isOpen = marketplaceState?.status === 'open';
+    const isClosed = marketplaceState?.status === 'executed';
 
     return (
         <Flex gap="1" align="center" data-testid="marketplace-start-stat">
