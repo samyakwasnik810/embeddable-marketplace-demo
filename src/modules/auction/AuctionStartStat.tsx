@@ -3,6 +3,7 @@ import { trpcReactClient } from "@/lib/trpc/client";
 import { formatTime, getTime } from "@/utils/time";
 import { Badge, Flex, Text } from "@chakra-ui/react";
 import { Flame } from "lucide-react";
+import dayjs from "dayjs";
 import React, { FC } from "react"
 
 interface Props {
@@ -21,8 +22,8 @@ const AuctionStartStat: FC<Props> = (props) => {
         enabled: !!collection.cw721 && !!tokenId && !!collection.auction
     });
 
-    const startTime = getTime(auctionState?.start_time ?? {});
-    const endTime = getTime(auctionState?.end_time ?? {});
+    const startTime = dayjs(auctionState?.start_time ?? 0);
+    const endTime = dayjs(auctionState?.end_time ?? 0);
     const isStarted = startTime.isBefore(new Date());
     const isEnded = endTime.isBefore(new Date());
 

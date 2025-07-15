@@ -35,8 +35,9 @@ const AuctionInfo: FC<AuctionInfoProps> = (props) => {
     enabled: !!collection.auction && !!tokenId && !!collection.cw721
   })
 
-  const startTime = getTime(auctionState?.start_time ?? {});
-  const endTime = getTime(auctionState?.end_time ?? {});
+  const startTime = dayjs(auctionState?.start_time ?? 0);
+  const endTime = dayjs(auctionState?.end_time ?? 0);
+
 
   const isStarted = startTime.isBefore(new Date());
   const isEnded = endTime.isBefore(new Date());

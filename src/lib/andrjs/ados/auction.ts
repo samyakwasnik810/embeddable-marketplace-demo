@@ -13,8 +13,8 @@ export namespace AUCTION {
     };
 
     export type GetLatestSaleStatePesponse = {
-        start_time: { at_time: string },
-        end_time: { at_time: string },
+        start_time: number,
+        end_time: number,
         high_bidder_addr: string,
         high_bidder_amount: Uint128,
         auction_id: Uint128,

@@ -10,10 +10,11 @@ export const auctionRouter = createTRPCRouter({
     getLatestAuctionState: withContractAddress
         .input(z.object({ tokenAddress: z.string(), tokenId: z.string() }))
         .query<AUCTION.GetLatestSaleStatePesponse>(async ({ input, ctx }) => {
+            const { address: resolvedTokenAddress } = await ctx.resolvePath(input.tokenAddress, ctx.chainList, input.tokenId);
             const saleState = await queryAuctionLatestSaleState(
-                ctx.chainConfig.lcdUrl,
+                await ctx.getRpcClient(ctx.chainConfig),
                 ctx.resolvedContractAddress,
-                input.tokenAddress,
+                resolvedTokenAddress,
                 input.tokenId
             );
             return saleState
@@ -23,7 +24,7 @@ export const auctionRouter = createTRPCRouter({
         .input(z.object({ auctionId: z.string(), pagination: z.custom<AUCTION.GetBidsPagination>().optional() }))
         .query<AUCTION.GetBidsResponse>(async ({ input, ctx }) => {
             const bids = await queryBids(
-                ctx.chainConfig.lcdUrl,
+                await ctx.getRpcClient(ctx.chainConfig),
                 ctx.resolvedContractAddress,
                 input.auctionId,
                 input.pagination,
