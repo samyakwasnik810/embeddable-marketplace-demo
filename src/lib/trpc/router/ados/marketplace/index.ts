@@ -8,10 +8,12 @@ export const marketplaceRouter = createTRPCRouter({
     getLatestSaleState: withContractAddress
         .input(z.object({ tokenAddress: z.string(), tokenId: z.string() }))
         .query<MARKETPLACE.LatestSaleStateResponse>(async ({ ctx, input }) => {
+            const rpcClient = await ctx.getRpcClient(ctx.chainConfig);
+            const { address: resolvedTokenAddress } = await ctx.resolvePath(input.tokenAddress, ctx.chainList, input["chain-identifier"]);
             const latestSaleState = await queryMarketplaceLatestSaleState(
-                ctx.chainConfig.lcdUrl,
+                rpcClient,
                 ctx.resolvedContractAddress,
-                input.tokenAddress,
+                resolvedTokenAddress,
                 input.tokenId
             );
             return latestSaleState;

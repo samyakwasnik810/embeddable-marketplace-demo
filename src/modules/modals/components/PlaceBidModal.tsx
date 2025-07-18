@@ -16,6 +16,7 @@ import { useExecuteModal } from "../hooks";
 import { PlaceBidModalProps } from "../types";
 import { trpcReactClient } from "@/lib/trpc/client";
 import { AUCTION } from "@/lib/andrjs/ados/auction";
+import PromiseButton from "@/modules/common/ui/PromiseButton";
 
 const PlaceBidModal: FC<PlaceBidModalProps> = (props) => {
   const { contractAddress, tokenId, auctionAddress } = props;
@@ -37,9 +38,15 @@ const PlaceBidModal: FC<PlaceBidModalProps> = (props) => {
     enabled: !!contractAddress && !!tokenId && !!auctionAddress
   });
   const { config } = useApp();
-
+  const utils = trpcReactClient.useUtils();
+  const { data: resolvedAuctionAddress } = trpcReactClient.os.vfs.resolvePath.useQuery({
+    "chain-identifier": config.chainId,
+    path: auctionAddress
+  }, {
+    enabled: !!config.chainId && !!auctionAddress
+  });
   // Execute place bid directly on auction
-  const openExecute = useExecuteModal(auctionAddress);
+  const openExecute = useExecuteModal(resolvedAuctionAddress ?? "");
 
   const MIN_BID = Math.max(
     0,
@@ -51,8 +58,12 @@ const PlaceBidModal: FC<PlaceBidModalProps> = (props) => {
 
   const [amount, setAmount] = useState(MIN_BID);
 
-  const onSubmit = () => {
-    const msg = AUCTION.placeBidMsg({ tokenAddress: contractAddress, tokenId: tokenId });
+  const onSubmit = async () => {
+    const resolvedTokenAddress = await utils.os.vfs.resolvePath.fetch({
+      "chain-identifier": config.chainId,
+      path: contractAddress
+    });
+    const msg = AUCTION.placeBidMsg({ tokenAddress: resolvedTokenAddress, tokenId: tokenId });
     const funds = coins(amount, DENOM);
     openExecute(msg, true, funds);
   };
@@ -88,9 +99,9 @@ const PlaceBidModal: FC<PlaceBidModalProps> = (props) => {
           <FormHelperText>
             Highest bid: {auctionState?.high_bidder_amount ?? "None"} {DENOM}
           </FormHelperText>
-          <Button onClick={onSubmit} w="full" mt="6" variant="solid">
+          <PromiseButton onClick={onSubmit} w="full" mt="6" variant="solid" isLoading={!resolvedAuctionAddress}>
             Place a bid
-          </Button>
+          </PromiseButton>
         </FormControl>
       </Box>
     </Box>

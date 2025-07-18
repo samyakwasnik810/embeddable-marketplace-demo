@@ -19,6 +19,8 @@ import { useGetCw721Token } from "@/lib/andrjs/hooks/ado/cw721";
 import { useGetRate } from "@/lib/andrjs/hooks/ado/rates";
 import { sumCoins } from "@/lib/andrjs/utils";
 import useBuyNowConstruct from "@/lib/andrjs/hooks/useBuyNowConstruct";
+import { trpcReactClient } from "@/lib/trpc/client";
+import PromiseButton from "@/modules/common/ui/PromiseButton";
 
 
 const BuyNowModal: FC<BuyNowModalProps> = (props) => {
@@ -29,6 +31,20 @@ const BuyNowModal: FC<BuyNowModalProps> = (props) => {
     contractAddress,
     tokenId
   );
+  const { config } = useApp();
+
+  const { data: resolvedMarketplaceAddress } = trpcReactClient.os.vfs.resolvePath.useQuery({
+    "chain-identifier": config.chainId,
+    path: marketplaceAddress
+  }, {
+    enabled: !!config.chainId && !!marketplaceAddress
+  });
+  const { data: resolvedTokenAddress } = trpcReactClient.os.vfs.resolvePath.useQuery({
+    "chain-identifier": config.chainId,
+    path: contractAddress
+  }, {
+    enabled: !!config.chainId && !!contractAddress
+  });
 
   const { data: rate } = useGetRate(marketplaceAddress, "Buy");
   const localRate = rate && "local" in rate ? rate.local : undefined;
@@ -56,7 +72,6 @@ const BuyNowModal: FC<BuyNowModalProps> = (props) => {
     }
   }
 
-  const { config } = useApp();
   const DENOM = marketplaceState?.coin_denom ?? config?.coinDenom ?? "ujunox";
   const rateCoin = calcAmount();
   const rateCoinAmount = parseFloat(rateCoin?.amount ?? "0")
@@ -71,10 +86,10 @@ const BuyNowModal: FC<BuyNowModalProps> = (props) => {
 
 
   // Execute place bid directly on auction
-  const openExecute = useExecuteModal(marketplaceAddress);
+  const openExecute = useExecuteModal(resolvedMarketplaceAddress ?? "");
 
   const onSubmit = () => {
-    const msg = construct({ tokenAddress: contractAddress, tokenId: tokenId });
+    const msg = construct({ tokenAddress: resolvedTokenAddress ?? contractAddress, tokenId: tokenId });
 
     console.log(JSON.stringify(msg));
     console.log("DENOM:", DENOM);
@@ -159,9 +174,9 @@ const BuyNowModal: FC<BuyNowModalProps> = (props) => {
             </Grid>
           )}
 
-          <Button onClick={onSubmit} w="full" mt="6" variant="solid">
+          <PromiseButton isLoading={!resolvedMarketplaceAddress} onClick={onSubmit} w="full" mt="6" variant="solid">
             Buy Now
-          </Button>
+          </PromiseButton>
         </FormControl>
       </Box>
     </Box>

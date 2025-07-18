@@ -10,7 +10,7 @@ export const auctionRouter = createTRPCRouter({
     getLatestAuctionState: withContractAddress
         .input(z.object({ tokenAddress: z.string(), tokenId: z.string() }))
         .query<AUCTION.GetLatestSaleStatePesponse>(async ({ input, ctx }) => {
-            const { address: resolvedTokenAddress } = await ctx.resolvePath(input.tokenAddress, ctx.chainList, input.tokenId);
+            const { address: resolvedTokenAddress } = await ctx.resolvePath(input.tokenAddress, ctx.chainList, input["chain-identifier"]);
             const saleState = await queryAuctionLatestSaleState(
                 await ctx.getRpcClient(ctx.chainConfig),
                 ctx.resolvedContractAddress,

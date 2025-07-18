@@ -12,7 +12,7 @@ interface IButtonProps extends ButtonProps {
 const BuyNowButton: FC<IButtonProps> = (props) => {
   const { marketplaceAddress, contractAddress, tokenId, children, ...buttonProps } = props;
   const { data: marketplaceState } = trpcReactClient.ado.marketplace.getLatestSaleState.useQuery({
-    "contract-address": contractAddress,
+    "contract-address": marketplaceAddress,
     tokenAddress: contractAddress,
     tokenId: tokenId,
   }, {

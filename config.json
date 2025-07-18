@@ -9,6 +9,13 @@
       "name": "Auction",
       "type": "embeddables-auction",
       "id": "auction"
+    },
+    {
+      "marketplace": "ibc://andromeda/home/andr1hld7gz2nr27sfg6fdqrpr6cpzmpc9qky5sad7g28h8dpnv24j9qqqnqph7/marketplace",
+      "cw721": "ibc://andromeda/home/andr1hld7gz2nr27sfg6fdqrpr6cpzmpc9qky5sad7g28h8dpnv24j9qqqnqph7/tokens",
+      "name": "Marketplace",
+      "type": "embeddables-marketplace",
+      "id": "marketplace"
     }
   ],
   "$type": "nft",

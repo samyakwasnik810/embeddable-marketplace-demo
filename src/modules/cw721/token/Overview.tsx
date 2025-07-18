@@ -9,6 +9,7 @@ import { LINKS } from "@/utils/links";
 import { CopyButton } from "@/modules/common/ui";
 import { truncate, truncateAddress } from "@/utils/text";
 import { useChainConfig } from "@/lib/andrjs/hooks/useChainConfig";
+import { trpcReactClient } from "@/lib/trpc/client";
 
 interface OverviewProps {
   contractAddress: string;
@@ -18,10 +19,16 @@ interface OverviewProps {
 
 const Overview: FC<OverviewProps> = (props) => {
   const { tokenId, contractAddress, collection } = props;
+  const { config } = useApp();
+  const { data: resolvedTokenAddress } = trpcReactClient.os.vfs.resolvePath.useQuery({
+    "chain-identifier": config.chainId,
+    path: contractAddress
+  }, {
+    enabled: !!config.chainId && !!contractAddress
+  });
   const { data: token } = useGetCw721Token(contractAddress, tokenId);
   const { data: cw721 } = useGetCw721(contractAddress);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { config } = useApp();
   const { data: chainConfig } = useChainConfig(config.chainId ?? "");
 
   function embededYTLink(youTubeUrl: string) {
@@ -79,8 +86,8 @@ const Overview: FC<OverviewProps> = (props) => {
                 <Text fontWeight="bold" fontSize="sm">
                   Token Collection Address
                 </Text>
-                <CopyButton variant="unstyled" text={contractAddress} as={Text} height="auto" fontWeight="light" fontSize="sm">
-                  {truncateAddress(contractAddress)}
+                <CopyButton variant="unstyled" text={resolvedTokenAddress ?? contractAddress} as={Text} height="auto" fontWeight="light" fontSize="sm">
+                  {truncateAddress(resolvedTokenAddress ?? contractAddress)}
                 </CopyButton>
               </Flex>
               <Divider orientation="horizontal" my="4" />
