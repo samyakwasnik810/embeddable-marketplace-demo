@@ -1,0 +1,12 @@
+{
+  "description": "this is a doro nft.", 
+  "external_url": "https://openseacreatures.io/3", 
+  "image": "https://gateway.pinata.cloud/ipfs/bafkreihnqpgmxcuyzsxi2ojzkswh6jegrbodv5tnho7t4o3mpp5lbxvqb4", 
+  "name": "dora nft metadata",
+  "attributes": [ 
+    {
+        "trait_type": "GitHub",
+        "value": "samyakwasnik810"  
+    }
+   ]
+}

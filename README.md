@@ -1,38 +1,61 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 💙 Dora Crypto Exchange dApp on Andromeda Protocol
 
-## Getting Started
+ ![Dora NFT](./doranft.png)
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## 🪙 What is Dora Crypto Exchange dApp?
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The **Dora Crypto Exchange dApp** is a fun, secure, and decentralized exchange built on the powerful **Andromeda Protocol** (chain ID: `elgafar-1`).  
+It allows users to **swap tokens like CW20 and uandr** using verified smart contracts — all within a clean, user-friendly interface.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+This project blends **simplicity, speed, and safety** with a fun visual design inspired by everyone's favorite robotic cat 🐱💼.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+---
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## ✨ Highlights & Features
 
-## Learn More
+- 🔄 **Token Swap Engine**  
+  Seamlessly swap `uandr` ↔️ CW20 tokens in real-time.
 
-To learn more about Next.js, take a look at the following resources:
+- 🔐 **Smart Contract Security**  
+  Built with verified Andromeda modules for high reliability.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- 🧩 **Modular Architecture**  
+  Collections make integration easy and future-ready.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- 🌐 **Runs on Andromeda Protocol**  
+  Leveraging Cosmos-based, scalable blockchain power.
 
-## Deploy on Vercel
+- 🧑‍💻 **Beginner-Friendly UI**  
+  Clean layout with on-screen wallet integration and clear token flows.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- 🎯 **Embeddable Anywhere**  
+  Designed to run in iFrames or standalone in dApps, websites, or dashboards.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+---![alt text](<Screenshot 2025-07-25 160135.png>)
 
-## Licensing
+## ⚙️ Technical Specifications
 
-[Terms and Conditions](https://github.com/andromedaprotocol/andromeda-core/blob/development/LICENSE/LICENSE.md)
+| Key Info               | Value |
+|------------------------|-------|
+| **Chain ID**           | `elgafar-1` |
+| **Coin Denomination**  | `uandr` |
+| **Exchange Address**   | `andr1juelw6h77mhneqxfy457ge6gq3xjqp3kx302qt00tm7r2p8c0hxsjhenfz` |
+| **CW20 Token Address** | `andr184pswkfg35s482rgnvun9409zj89f37rq6mal5snx5yq2l8ah9eqzzznzq` |
+| **Module Type**        | `EXCHANGE` |
+| **dApp ID**            | `andromeda` |
+| **Created On**         | `2024-03-31` |
+
+---
+![alt text](<Screenshot 2025-07-25 160236.png>)
+## 🧩 Smart Module Collection
+
+```json
+{
+  "exchange": "andr1juelw6h77mhneqxfy457ge6gq3xjqp3kx302qt00tm7r2p8c0hxsjhenfz",
+  "cw20": "andr184pswkfg35s482rgnvun9409zj89f37rq6mal5snx5yq2l8ah9eqzzznzq",
+  "name": "Dora Crypto Exchange dApp",
+  "type": "EXCHANGE",
+  "id": "embeddables-exchange-1"
+}
