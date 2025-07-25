@@ -34,12 +34,7 @@ This project blends **simplicity, speed, and safety** with a fun visual design i
   Designed to run in iFrames or standalone in dApps, websites, or dashboards.
 
 ---![alt text](<Screenshot 2025-07-25 160135.png>)
-🔹 **Dora Crypto Exchange dApp**  
-  🔗 [https://embeddables.testnet.andromedaprotocol.io/galileo-4/this-is-a-dora-crypto-exchange-dApp](https://embeddables.testnet.andromedaprotocol.io/galileo-4/this-is-a-dora-crypto-exchange-dApp)
 
-- 🔹 **Dora Crypto dApp**  
-  🔗 [https://embeddables.testnet.andromedaprotocol.io/galileo-4/this-is-dora-crypto-dapp](https://embeddables.testnet.andromedaprotocol.io/galileo-4/this-is-dora-crypto-dapp)
-## ⚙️ Technical Specifications
 
 | Key Info               | Value |
 |------------------------|-------|
