@@ -15,12 +15,6 @@ const CONFIG: IConfig = {
             name: "dora crypto exchange dApp",
             type: ICollectionType.EXCHANGE,
             id: "embeddables-exchange-1",
-        }, {
-            "crowdfund": "andr15rpjdefvw3lm4vq0mwf8lg2xkv8srr258jjle6",
-            "cw721": "andr13re6el7k0sdzrkernueq2jepwy8psd4829runltvvpw0d0t34wws9l9nmv",
-            "name": "doratokencollection",
-            "type":  ICollectionType.CROWDFUND,
-            "id": "embeddables-crowdfund-1"
         },
         {
             "cw721": "andr13re6el7k0sdzrkernueq2jepwy8psd4829runltvvpw0d0t34wws9l9nmv",
